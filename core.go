@@ -1,6 +1,7 @@
 package zapdriver
 
 import (
+	"regexp"
 	"strings"
 
 	"go.uber.org/zap"
@@ -124,6 +125,9 @@ func (c *core) Check(ent zapcore.Entry, ce *zapcore.CheckedEntry) *zapcore.Check
 	return ce
 }
 
+// multiline pattern to match the function name line
+var functionNamePattern = regexp.MustCompile(`(?m)^(\S+)$`)
+
 func (c *core) Write(ent zapcore.Entry, fields []zapcore.Field) error {
 	var lbls *labels
 	lbls, fields = c.extractLabels(fields)
@@ -151,6 +155,19 @@ func (c *core) Write(ent zapcore.Entry, fields []zapcore.Field) error {
 	}
 
 	c.tempLabels.reset()
+
+	// https://github.com/evanj/gcplogs/blob/4d593c6e8beb16c134af8baff3d266d73573d16f/gcpzap/encoder.go#L46
+	if ent.Stack != "" {
+		// Make the message look like a real panic, so Stackdriver error reporting picks it up.
+		// This used to need the string "panic: " at the beginning, but no longer seems to need it!
+		// ent.Message = "panic: " + ent.Message + "\n\ngoroutine 1 [running]:\n"
+		ent.Message = ent.Message + "\n\ngoroutine 1 [running]:\n"
+		// Trial-and-error: On App Engine Standard go111 the () are needed after function calls
+		// zap does not add them, so hack it with a regexp
+		replaced := functionNamePattern.ReplaceAllString(ent.Stack, "$1(...)")
+		ent.Message += replaced
+		ent.Stack = ""
+	}
 
 	return c.Core.Write(ent, fields)
 }
