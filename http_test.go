@@ -12,7 +12,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"go.ajitem.com/zapdriver"
+	"github.com/gridwise/zapdriver"
 )
 
 func TestHTTP(t *testing.T) {
