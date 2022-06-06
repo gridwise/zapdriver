@@ -9,7 +9,7 @@ import (
 
 	"go.uber.org/zap/zapcore"
 
-	"go.ajitem.com/zapdriver"
+	"github.com/gridwise/zapdriver"
 )
 
 func TestEncodeLevel(t *testing.T) {

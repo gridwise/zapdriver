@@ -1,4 +1,4 @@
-module go.ajitem.com/zapdriver
+module github.com/gridwise/zapdriver
 
 go 1.17
 

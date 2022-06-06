@@ -8,7 +8,7 @@ Blazing fast, [Zap][zap]-based [Stackdriver][stackdriver] logging.
 ## Usage
 
 ```golang
-import "go.ajitem.com/zapdriver"
+import "github.com/gridwise/zapdriver"
 ```
 
 This package provides three building blocks to support the full array of
