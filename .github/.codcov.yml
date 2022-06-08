@@ -1,0 +1,8 @@
+codecov:
+  require_ci_to_pass: yes
+  branch: master
+
+comment:
+  require_changes: no
+  require_head: no     # default yes
+  require_base: no     # default yes
